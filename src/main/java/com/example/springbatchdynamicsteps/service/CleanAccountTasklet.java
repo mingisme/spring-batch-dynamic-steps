@@ -18,6 +18,7 @@ public class CleanAccountTasklet implements Tasklet {
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+        contribution.getStepExecution().getExecutionContext().put("step","cleanAccount");
         contribution.getStepExecution().getJobExecution().getExecutionContext().put("deleteAll","YES");
         accountRepository.deleteAll();
 

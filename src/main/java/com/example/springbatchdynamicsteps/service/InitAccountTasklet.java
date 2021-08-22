@@ -21,7 +21,7 @@ public class InitAccountTasklet implements Tasklet {
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-
+        contribution.getStepExecution().getExecutionContext().put("step","initAccount");
         Object deleteAllValue = contribution.getStepExecution().getJobExecution().getExecutionContext().get("deleteAll");
         log.info("deleteAll value: {}", deleteAllValue);
 

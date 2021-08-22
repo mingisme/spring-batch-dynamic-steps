@@ -8,6 +8,7 @@ import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.listener.ExecutionContextPromotionListener;
 import org.springframework.batch.core.step.tasklet.TaskletStep;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.task.batch.listener.TaskBatchExecutionListener;
@@ -46,8 +47,11 @@ public class AccountService {
         TaskletStep cleanAccountStep = stepBuilderFactory.get("cleanAccount")
                 .tasklet(cleanAccountTasklet).build();
 
+        ExecutionContextPromotionListener listener = new ExecutionContextPromotionListener();
+        listener.setKeys(new String[]{"step"});
+
         TaskletStep initAccountStep = stepBuilderFactory.get("initAccount")
-                .tasklet(initAccountTasklet).build();
+                .tasklet(initAccountTasklet).listener(listener).build();
 
         Job resetAccountJob = jobBuilderFactory.get("resetAccounts")
                 .listener(taskBatchExecutionListener)
