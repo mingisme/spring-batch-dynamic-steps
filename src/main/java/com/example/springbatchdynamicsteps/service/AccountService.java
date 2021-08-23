@@ -41,6 +41,9 @@ public class AccountService {
     @Autowired
     private InitAccountTasklet initAccountTasklet;
 
+    @Autowired
+    private LongTimeTasklet longTimeTasklet;
+
     @SneakyThrows
     public void resetAccounts() {
 
@@ -53,13 +56,17 @@ public class AccountService {
         TaskletStep initAccountStep = stepBuilderFactory.get("initAccount")
                 .tasklet(initAccountTasklet).listener(listener).build();
 
+        TaskletStep longTimeStep = stepBuilderFactory.get("longTime")
+                .tasklet(longTimeTasklet).build();
+
         Job resetAccountJob = jobBuilderFactory.get("resetAccounts")
                 .listener(taskBatchExecutionListener)
                 .start(cleanAccountStep)
-                .next(initAccountStep).build();
+                .next(initAccountStep)
+                .next(longTimeStep).build();
 
         Map<String, JobParameter> parameterMap = new HashMap<>();
-        parameterMap.put("treadId", new JobParameter(Thread.currentThread().getId()));
+        parameterMap.put("jobId", new JobParameter(System.currentTimeMillis()));
         JobParameters jobParameters = new JobParameters(parameterMap);
         jobLauncher.run(resetAccountJob, jobParameters);
 
