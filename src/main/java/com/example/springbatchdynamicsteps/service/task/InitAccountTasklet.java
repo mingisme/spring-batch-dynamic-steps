@@ -1,4 +1,4 @@
-package com.example.springbatchdynamicsteps.service;
+package com.example.springbatchdynamicsteps.service.task;
 
 import com.example.springbatchdynamicsteps.model.Account;
 import com.example.springbatchdynamicsteps.repository.AccountRepository;

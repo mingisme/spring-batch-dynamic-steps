@@ -1,9 +1,12 @@
 package com.example.springbatchdynamicsteps;
 
 import lombok.SneakyThrows;
+import org.springframework.batch.core.configuration.JobRegistry;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
+import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.launch.support.SimpleJobLauncher;
+import org.springframework.batch.core.launch.support.SimpleJobOperator;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -38,6 +41,21 @@ public class SpringBatchDynamicStepsApplication {
 		jobLauncher.setTaskExecutor(new SimpleAsyncTaskExecutor());
 		jobLauncher.afterPropertiesSet();
 		return jobLauncher;
+	}
+
+	@Bean
+	public SimpleJobOperator jobOperator(JobExplorer jobExplorer,
+										 JobRepository jobRepository,
+										 JobRegistry jobRegistry, JobLauncher jobLauncher) {
+
+		SimpleJobOperator jobOperator = new SimpleJobOperator();
+
+		jobOperator.setJobExplorer(jobExplorer);
+		jobOperator.setJobRepository(jobRepository);
+		jobOperator.setJobRegistry(jobRegistry);
+		jobOperator.setJobLauncher(jobLauncher);
+
+		return jobOperator;
 	}
 
 }

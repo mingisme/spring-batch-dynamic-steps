@@ -1,28 +1,29 @@
 package com.example.springbatchdynamicsteps.controller;
 
 import com.example.springbatchdynamicsteps.service.AccountService;
+import lombok.SneakyThrows;
+import org.springframework.batch.core.launch.JobOperator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
 @RestController
-@RequestMapping("/account")
-public class AccountController {
+@RequestMapping("/job")
+public class JobController {
 
     @Autowired
-    private AccountService accountService;
+    private JobOperator jobOperator;
 
 
-    @GetMapping("/reset")
-    public String resetAccount(){
-        accountService.resetAccounts();
+    @SneakyThrows
+    @GetMapping("/restart/{id}")
+    public String restart(@PathVariable long id){
+        jobOperator.restart(id);
         return "OK";
     }
 
-    @GetMapping("/thresh-hold")
-    public String threshHold(){
-        accountService.threshHold();
-        return "OK";
-    }
+
 }
